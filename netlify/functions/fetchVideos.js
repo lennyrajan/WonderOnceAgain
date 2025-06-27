@@ -1,5 +1,3 @@
-// netlify/functions/fetchVideos.js
-
 const fetch = require('node-fetch');
 
 const API_KEY = process.env.YOUTUBE_API_KEY;
