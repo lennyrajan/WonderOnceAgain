@@ -79,7 +79,7 @@
     <div id="clock" class="font-mono text-gray-600 relative z-10"></div>
 
     <!-- Birds container inside top bar -->
-    <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-visible"></div>
+    <div id="birdsContainer" class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-visible"></div> <!-- CHANGED: added id -->
   </div>
 
   <header class="text-center py-8 flex-shrink-0">
@@ -217,7 +217,7 @@
 
     // Birds animation inside top bar
     function createBird(delaySec, topPercent, durationSec) {
-      const container = document.querySelector("div.relative.flex.justify-between > div.absolute.top-0.left-0");
+      const container = document.getElementById("birdsContainer"); // CHANGED: select by ID
       const bird = document.createElement("div");
       bird.classList.add("bird");
       bird.style.top = `${topPercent}%`;
