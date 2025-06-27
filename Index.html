@@ -9,35 +9,57 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
 
-  <body id="body" class="transition-colors duration-1000 text-gray-800 min-h-screen">
-  
-    <header class="text-center py-8">
+<body id="body" class="transition-colors duration-1000 text-gray-800 min-h-screen flex flex-col">
+
+  <!-- Top bar: Greeting and Clock -->
+  <div class="flex justify-between items-center px-6 py-2 bg-gray-100 border-b border-gray-300">
+    <div id="greeting" class="text-lg font-semibold text-gray-700"></div>
+    <div id="clock" class="font-mono text-gray-600"></div>
+  </div>
+
+  <header class="text-center py-8 flex-shrink-0">
     <h1 class="text-4xl font-bold">Kids Stories and Magical Moments</h1>
     <p class="text-lg mt-2">Enchanting short stories for little hearts 💫</p>
   </header>
 
-  <main class="px-4 md:px-16">
+  <main class="px-4 md:px-16 flex-grow">
     <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
   </main>
 
-<!-- Modal -->
-<div id="videoModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
-  <div class="relative w-full max-w-sm sm:max-w-md md:max-w-lg" style="aspect-ratio: 9 / 16;">
-    <iframe
-      id="modalIframe"
-      class="w-full h-full rounded-xl shadow-xl"
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen
-    ></iframe>
-    <button
-      onclick="closeModal()"
-      class="absolute -top-3 -right-3 bg-white text-black p-2 rounded-full shadow"
-      aria-label="Close video"
-    >❌</button>
+  <!-- Modal -->
+  <div id="videoModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+    <div class="relative w-full max-w-sm sm:max-w-md md:max-w-lg" style="aspect-ratio: 9 / 16;">
+      <iframe
+        id="modalIframe"
+        class="w-full h-full rounded-xl shadow-xl"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen
+      ></iframe>
+      <button
+        onclick="closeModal()"
+        class="absolute -top-3 -right-3 bg-white text-black p-2 rounded-full shadow"
+        aria-label="Close video"
+      >❌</button>
+    </div>
   </div>
-</div>
-  
+
+  <!-- Footer -->
+  <footer class="mt-12 text-center text-gray-600 text-sm py-6 border-t border-gray-300 flex flex-col items-center gap-3">
+    <div>Made with ☕ by Lenny Rajan</div>
+    <div class="flex gap-6 text-xl">
+      <a href="https://www.facebook.com/magicalkidsstories" target="_blank" aria-label="Facebook" title="Facebook" rel="noopener noreferrer" class="hover:text-blue-600 transition">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 320 512"><path d="M279.1 288l14.2-92.7h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06H293V6.26S273.5 0 248.3 0c-73.3 0-121.1 44.38-121.1 124.7v70.7H89.09V288h38.12v224h92.58V288z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/magicalmomentskidsstories/" target="_blank" aria-label="Instagram" title="Instagram" rel="noopener noreferrer" class="hover:text-pink-600 transition">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 448 512"><path d="M224 202.7A53.3 53.3 0 1 0 277.3 256 53.38 53.38 0 0 0 224 202.7zm124.7-41a54.6 54.6 0 0 1 30.5 30.5c7 17.2 10.7 35.7 10.7 55.8s-3.7 38.6-10.7 55.8a54.6 54.6 0 0 1-30.5 30.5c-17.2 7-35.7 10.7-55.8 10.7s-38.6-3.7-55.8-10.7a54.6 54.6 0 0 1-30.5-30.5c-7-17.2-10.7-35.7-10.7-55.8s3.7-38.6 10.7-55.8a54.6 54.6 0 0 1 30.5-30.5c17.2-7 35.7-10.7 55.8-10.7s38.6 3.7 55.8 10.7zM224 72c-84.9 0-152 67.1-152 152s67.1 152 152 152 152-67.1 152-152-67.1-152-152-152z"/></svg>
+      </a>
+      <a href="https://youtube.com/@kidsstoriesandmagicalmoments" target="_blank" aria-label="YouTube" title="YouTube" rel="noopener noreferrer" class="hover:text-red-600 transition">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 576 512"><path d="M549.7 124.1C532.9 87.1 499.5 64 463.5 64H312l12.2-58.5c3.3-15.8-8.6-30.5-24.7-30.5H152c-10.7 0-20.3 6.7-23.8 16.6L56 160H24C10.7 160 0 170.7 0 184v16c0 13.3 10.7 24 24 24H70.6l45.6 208.3c2.6 11.9 13.3 19.7 25.4 19.7h272c12 0 22.8-7.9 25.4-19.7l60.5-276.7c3.3-15.3-7.9-29.6-23.8-29.6zM316 64h147.5c22.6 0 43.3 12.6 54 32.6L576 256l-59.5 141.4c-10.7 20-31.4 32.6-54 32.6H316V64z"/></svg>
+      </a>
+    </div>
+  </footer>
+
   <script>
     async function fetchVideos() {
       try {
@@ -85,26 +107,50 @@
       modal.classList.add("hidden");
     }
 
-    window.onload = fetchVideos;
+    window.onload = () => {
+      fetchVideos();
+      updateGreetingAndClock();
+      setInterval(updateGreetingAndClock, 1000);
+    };
+
+    function updateGreetingAndClock() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+
+      // Format clock as HH:MM:SS
+      const pad = n => n.toString().padStart(2, '0');
+      const timeString = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+      document.getElementById('clock').textContent = timeString;
+
+      // Determine greeting
+      let greeting = "Hello!";
+      if (hours >= 5 && hours < 12) greeting = "Good morning!";
+      else if (hours >= 12 && hours < 17) greeting = "Good afternoon!";
+      else if (hours >= 17 && hours < 21) greeting = "Good evening!";
+      else greeting = "Good night!";
+
+      document.getElementById('greeting').textContent = greeting;
+    }
 
     // Dynamic background gradient
-const gradients = [
-  "from-pink-100 to-purple-200",
-  "from-yellow-100 to-red-200",
-  "from-blue-100 to-indigo-200",
-  "from-green-100 to-teal-200",
-  "from-rose-100 to-fuchsia-200",
-  "from-sky-100 to-cyan-200"
-];
+    const gradients = [
+      "from-pink-100 to-purple-200",
+      "from-yellow-100 to-red-200",
+      "from-blue-100 to-indigo-200",
+      "from-green-100 to-teal-200",
+      "from-rose-100 to-fuchsia-200",
+      "from-sky-100 to-cyan-200"
+    ];
 
-let current = 0;
-setInterval(() => {
-  const body = document.getElementById("body");
-  body.classList.remove(...gradients);
-  current = (current + 1) % gradients.length;
-  body.classList.add("bg-gradient-to-br", ...gradients[current].split(" "));
-}, 8000);
-
+    let current = 0;
+    setInterval(() => {
+      const body = document.getElementById("body");
+      body.classList.remove(...gradients);
+      current = (current + 1) % gradients.length;
+      body.classList.add("bg-gradient-to-br", ...gradients[current].split(" "));
+    }, 8000);
   </script>
 
 </body>
