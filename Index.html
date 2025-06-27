@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kids Stories and Magical Moments</title>
+  <meta name="description" content="Watch enchanting kids stories from the YouTube channel 'Kids Stories and Magical Moments'." />
+  <meta name="keywords" content="kids stories, bedtime stories, magical moments, children's videos, fairy tales" />
+  <meta name="author" content="Kids Stories and Magical Moments" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script defer>
+    const API_KEY = "AIzaSyBkiOnmu-GDnvtxKF8suazg95mB1lEa4Dk";
+    const CHANNEL_USERNAME = "kidsstoriesandmagicalmoments";async function getChannelId(username) {
+  const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=id&forUsername=${username}&key=${API_KEY}`);
+  const data = await res.json();
+  return data.items?.[0]?.id || null;
+}
+
+async function fetchVideos(channelId) {
+  const res = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${channelId}&part=snippet,id&order=date&maxResults=12`);
+  const data = await res.json();
+  return data.items.filter(item => item.id.kind === "youtube#video");
+}
+
+function createVideoCard(video) {
+  const container = document.createElement("div");
+  container.className = "rounded-xl overflow-hidden shadow-lg bg-white hover:scale-105 transition-all duration-300";
+
+  container.innerHTML = `
+    <img class="w-full" src="${video.snippet.thumbnails.high.url}" alt="${video.snippet.title}" />
+    <div class="p-4">
+      <h2 class="text-lg font-semibold">${video.snippet.title}</h2>
+    </div>
+  `;
+
+  container.addEventListener("click", () => {
+    const modal = document.getElementById("videoModal");
+    const iframe = document.getElementById("modalIframe");
+    iframe.src = `https://www.youtube.com/embed/${video.id.videoId}?autoplay=1`;
+    modal.classList.remove("hidden");
+  });
+
+  return container;
+}
+
+async function init() {
+  const channelId = await getChannelId(CHANNEL_USERNAME);
+  if (!channelId) {
+    console.error("Channel ID not found");
+    return;
+  }
+
+  const videos = await fetchVideos(channelId);
+  const grid = document.getElementById("videoGrid");
+  videos.forEach(video => grid.appendChild(createVideoCard(video)));
+}
+
+window.onload = init;
+
+  </script>
+</head>
+<body class="bg-gradient-to-br from-pink-100 to-purple-200 text-gray-800 min-h-screen">
+  <header class="text-center py-8">
+    <h1 class="text-4xl font-bold">Kids Stories and Magical Moments</h1>
+    <p class="text-lg mt-2">Whimsical tales for little hearts</p>
+  </header>  <main class="px-4 md:px-12 lg:px-24">
+    <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+  </main>  <!-- Modal -->  <div id="videoModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+    <div class="relative w-full max-w-3xl aspect-video">
+      <iframe id="modalIframe" class="w-full h-full" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <button onclick="this.parentElement.parentElement.classList.add('hidden'); document.getElementById('modalIframe').src = '';" class="absolute top-2 right-2 bg-white rounded-full p-2">❌</button>
+    </div>
+  </div>
+</body>
+</html>
