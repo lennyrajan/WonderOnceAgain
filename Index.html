@@ -1,62 +1,138 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kids Stories and Magical Moments</title>
   <meta name="description" content="Watch magical short stories for kids from YouTube. A sweet blend of kindness, imagination, and bedtime joy!" />
   <meta name="keywords" content="kids stories, bedtime stories, YouTube shorts, magical moments" />
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <style>
-    body {
-      background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
-      background-blend-mode: overlay;
-    }
-    .balloon {
-      animation: float 8s ease-in-out infinite;
+    /* Birds animation */
+    .bird {
       position: absolute;
-      width: 50px;
+      width: 30px;
+      height: 20px;
+      background: url('https://cdn-icons-png.flaticon.com/512/616/616408.png') no-repeat center/contain;
+      animation-timing-function: linear;
+      will-change: transform;
+      filter: drop-shadow(0 0 1px rgba(0,0,0,0.1));
+      opacity: 0;
+      pointer-events: none;
+      user-select: none;
+      z-index: 20;
     }
-    @keyframes float {
-      0% { transform: translateY(100vh); }
-      100% { transform: translateY(-100vh); }
+    @keyframes flyRight {
+      0% {
+        transform: translateX(-40px) translateY(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        transform: translateX(110vw) translateY(-10px);
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* Grass silhouette for footer */
+    .grass {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      background: linear-gradient(to top, #2f855a 0%, transparent 100%);
+      clip-path: polygon(
+        0% 100%,
+        10% 70%,
+        20% 100%,
+        25% 80%,
+        30% 100%,
+        40% 60%,
+        50% 100%,
+        60% 75%,
+        70% 100%,
+        80% 70%,
+        90% 100%,
+        100% 75%,
+        100% 100%,
+        0% 100%
+      );
+      opacity: 0.75;
+      pointer-events: none;
+      user-select: none;
+      filter: drop-shadow(0 0 1px rgba(0,0,0,0.1));
+      z-index: 1;
     }
   </style>
 </head>
-<body id="body" class="transition-colors duration-1000 text-gray-800 min-h-screen flex flex-col relative overflow-hidden">
-  <!-- Floating balloons -->
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Emoji_u1f388.svg/1024px-Emoji_u1f388.svg.png" class="balloon left-10" style="top: 100%; animation-delay: 0s;">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Emoji_u1f388.svg/1024px-Emoji_u1f388.svg.png" class="balloon left-1/2" style="top: 120%; animation-delay: 3s;">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Emoji_u1f388.svg/1024px-Emoji_u1f388.svg.png" class="balloon right-10" style="top: 140%; animation-delay: 6s;">  <!-- Top bar: Greeting and Clock -->  <div class="flex justify-between items-center px-6 py-2 bg-white bg-opacity-70 border-b border-gray-300">
-    <div id="greeting" class="text-lg font-semibold text-gray-700"></div>
-    <div id="clock" class="font-mono text-gray-600"></div>
-  </div>  <header class="text-center py-8 flex-shrink-0">
-    <h1 class="text-4xl font-bold text-yellow-700">Kids Stories and Magical Moments</h1>
-    <p class="text-lg mt-2 text-pink-700">Enchanting short stories for little hearts ✫</p>
-  </header>  <main class="px-4 md:px-16 flex-grow">
+<body id="body" class="transition-colors duration-1000 text-gray-800 min-h-screen flex flex-col bg-gradient-to-br from-pink-100 to-purple-200">
+
+  <!-- Top bar: Greeting and Clock -->
+  <div class="relative flex justify-between items-center px-6 py-2 bg-gray-100 border-b border-gray-300 overflow-visible">
+    <div id="greeting" class="text-lg font-semibold text-gray-700 relative z-10"></div>
+    <div id="clock" class="font-mono text-gray-600 relative z-10"></div>
+
+    <!-- Birds container inside top bar -->
+    <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-visible"></div>
+  </div>
+
+  <header class="text-center py-8 flex-shrink-0">
+    <h1 class="text-4xl font-bold">Kids Stories and Magical Moments</h1>
+    <p class="text-lg mt-2">Enchanting short stories for little hearts 💫</p>
+  </header>
+
+  <main class="px-4 md:px-16 flex-grow overflow-auto">
     <div id="videoGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
-  </main>  <!-- Modal -->  <div id="videoModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+  </main>
+
+  <!-- Modal -->
+  <div id="videoModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
     <div class="relative w-full max-w-sm sm:max-w-md md:max-w-lg" style="aspect-ratio: 9 / 16;">
-      <iframe id="modalIframe" class="w-full h-full rounded-xl shadow-xl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-      <button onclick="closeModal()" class="absolute -top-3 -right-3 bg-white text-black p-2 rounded-full shadow" aria-label="Close video">❌</button>
+      <iframe
+        id="modalIframe"
+        class="w-full h-full rounded-xl shadow-xl"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen
+      ></iframe>
+      <button
+        onclick="closeModal()"
+        class="absolute -top-3 -right-3 bg-white text-black p-2 rounded-full shadow"
+        aria-label="Close video"
+      >❌</button>
     </div>
-  </div>  <!-- Footer -->  <footer class="mt-12 text-center text-gray-600 text-sm py-6 border-t border-gray-300 flex flex-col items-center gap-3 bg-white bg-opacity-60">
-    <div>Made with ☕ by Lenny Rajan</div>
-    <div class="flex gap-6 text-xl">
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-12 text-center text-gray-600 text-sm py-6 border-t border-gray-300 flex flex-col items-center gap-3 relative bg-white">
+    <div class="grass"></div>
+    <div class="relative z-10">Made with ☕ by Lenny Rajan</div>
+    <div class="flex gap-6 text-xl relative z-10">
       <a href="https://www.facebook.com/magicalkidsstories" target="_blank" aria-label="Facebook" title="Facebook" rel="noopener noreferrer" class="hover:text-blue-600 transition">
-        📻
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 320 512"><path d="M279.1 288l14.2-92.7h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06H293V6.26S273.5 0 248.3 0c-73.3 0-121.1 44.38-121.1 124.7v70.7H89.09V288h38.12v224h92.58V288z"/></svg>
       </a>
       <a href="https://www.instagram.com/magicalmomentskidsstories/" target="_blank" aria-label="Instagram" title="Instagram" rel="noopener noreferrer" class="hover:text-pink-600 transition">
-        📸
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 448 512"><path d="M224 202.7A53.3 53.3 0 1 0 277.3 256 53.38 53.38 0 0 0 224 202.7zm124.7-41a54.6 54.6 0 0 1 30.5 30.5c7 17.2 10.7 35.7 10.7 55.8s-3.7 38.6-10.7 55.8a54.6 54.6 0 0 1-30.5 30.5c-17.2 7-35.7 10.7-55.8 10.7s-38.6-3.7-55.8-10.7a54.6 54.6 0 0 1-30.5-30.5c-7-17.2-10.7-35.7-10.7-55.8s3.7-38.6 10.7-55.8a54.6 54.6 0 0 1 30.5-30.5c17.2-7 35.7-10.7 55.8-10.7s38.6 3.7 55.8 10.7zM224 72c-84.9 0-152 67.1-152 152s67.1 152 152 152 152-67.1 152-152-67.1-152-152-152z"/></svg>
       </a>
       <a href="https://youtube.com/@kidsstoriesandmagicalmoments" target="_blank" aria-label="YouTube" title="YouTube" rel="noopener noreferrer" class="hover:text-red-600 transition">
-        🎥
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 576 512"><path d="M549.7 124.1C532.9 87.1 499.5 64 463.5 64H312l12.2-58.5c3.3-15.8-8.6-30.5-24.7-30.5H152c-10.7 0-20.3 6.7-23.8 16.6L56 160H24C10.7 160 0 170.7 0 184v16c0 13.3 10.7 24 24 24H70.6l45.6 208.3c2.6 11.9 13.3 19.7 25.4 19.7h272c12 0 22.8-7.9 25.4-19.7l60.5-276.7c3.3-15.3-7.9-29.6-23.8-29.6zM316 64h147.5c22.6 0 43.3 12.6 54 32.6L576 256l-59.5 141.4c-10.7 20-31.4 32.6-54 32.6H316V64z"/></svg>
       </a>
     </div>
-  </footer>  <script>
+  </footer>
+
+  <script>
+    // Fetch videos and render
     async function fetchVideos() {
       try {
         const res = await fetch("/.netlify/functions/fetchVideos");
         const data = await res.json();
+
         const grid = document.getElementById("videoGrid");
         grid.innerHTML = "";
 
@@ -64,14 +140,15 @@
           const id = video.id?.videoId;
           const title = video.snippet?.title || "Untitled";
           const thumb = video.snippet?.thumbnails?.medium?.url || "";
+
           if (!id || !thumb) return;
 
           const div = document.createElement("div");
-          div.className = "bg-white bg-opacity-80 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 cursor-pointer";
+          div.className = "bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 cursor-pointer";
           div.innerHTML = `
-            <img src="${thumb}" alt="${title}" class="w-full">
+            <img src="${thumb}" alt="${title}" class="w-full" />
             <div class="p-4">
-              <h2 class="text-md font-semibold text-purple-800">${title}</h2>
+              <h2 class="text-md font-semibold">${title}</h2>
             </div>
           `;
 
@@ -83,6 +160,7 @@
       }
     }
 
+    // Open modal
     function openModal(videoId) {
       const modal = document.getElementById("videoModal");
       const iframe = document.getElementById("modalIframe");
@@ -90,6 +168,7 @@
       modal.classList.remove("hidden");
     }
 
+    // Close modal
     function closeModal() {
       const modal = document.getElementById("videoModal");
       const iframe = document.getElementById("modalIframe");
@@ -97,11 +176,13 @@
       modal.classList.add("hidden");
     }
 
+    // Greeting and clock update
     function updateGreetingAndClock() {
       const now = new Date();
       const hours = now.getHours();
       const minutes = now.getMinutes();
       const seconds = now.getSeconds();
+
       const pad = n => n.toString().padStart(2, '0');
       document.getElementById('clock').textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 
@@ -110,9 +191,11 @@
       else if (hours >= 12 && hours < 17) greeting = "Good afternoon!";
       else if (hours >= 17 && hours < 21) greeting = "Good evening!";
       else greeting = "Good night!";
+
       document.getElementById('greeting').textContent = greeting;
     }
 
+    // Dynamic background gradient cycling
     const gradients = [
       "from-pink-100 to-purple-200",
       "from-yellow-100 to-red-200",
@@ -122,18 +205,50 @@
       "from-sky-100 to-cyan-200"
     ];
 
-    let current = 0;
-    setInterval(() => {
+    let currentGradient = 0;
+    function cycleBackground() {
       const body = document.getElementById("body");
-      body.classList.remove(...gradients);
-      current = (current + 1) % gradients.length;
-      body.classList.add("bg-gradient-to-br", ...gradients[current].split(" "));
-    }, 8000);
+      // Remove previous gradient classes
+      gradients.forEach(g => body.classList.remove("from-pink-100","to-purple-200","from-yellow-100","to-red-200","from-blue-100","to-indigo-200","from-green-100","to-teal-200","from-rose-100","to-fuchsia-200","from-sky-100","to-cyan-200"));
+      const gradientClasses = gradients[currentGradient].split(" ");
+      body.classList.add("bg-gradient-to-br", ...gradientClasses);
+      currentGradient = (currentGradient + 1) % gradients.length;
+    }
 
+    // Birds animation inside top bar
+    function createBird(delaySec, topPercent, durationSec) {
+      const container = document.querySelector("div.relative.flex.justify-between > div.absolute.top-0.left-0");
+      const bird = document.createElement("div");
+      bird.classList.add("bird");
+      bird.style.top = `${topPercent}%`;
+      bird.style.animation = `flyRight ${durationSec}s linear ${delaySec}s forwards`;
+      container.appendChild(bird);
+      // Remove bird after animation ends to clean up DOM
+      bird.addEventListener("animationend", () => {
+        bird.remove();
+      });
+    }
+
+    function startBirdsLoop() {
+      // Create birds every 3 seconds with random top and duration
+      setInterval(() => {
+        const delay = 0;
+        const top = Math.random() * 60 + 10; // between 10% and 70%
+        const duration = 10 + Math.random() * 8; // between 10s and 18s
+        createBird(delay, top, duration);
+      }, 3000);
+    }
+
+    // Initialize everything
     window.onload = () => {
       fetchVideos();
       updateGreetingAndClock();
       setInterval(updateGreetingAndClock, 1000);
+      cycleBackground();
+      setInterval(cycleBackground, 8000);
+      startBirdsLoop();
     };
-  </script></body>
+  </script>
+
+</body>
 </html>
