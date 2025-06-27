@@ -7,60 +7,60 @@
   <meta name="description" content="Watch enchanting kids stories from the YouTube channel 'Kids Stories and Magical Moments'." />
   <meta name="keywords" content="kids stories, bedtime stories, magical moments, children's videos, fairy tales" />
   <meta name="author" content="Kids Stories and Magical Moments" />
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<script defer>
-  async function fetchVideos() {
-    try {
-      const res = await fetch("/.netlify/functions/fetchVideos");
-      const videos = await res.json();
-      const grid = document.getElementById("videoGrid");
-      grid.innerHTML = ""; // clear grid before loading
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script defer>
+    async function fetchVideos() {
+      try {
+        const res = await fetch("/.netlify/functions/fetchVideos");
+        const videos = await res.json();
+        const grid = document.getElementById("videoGrid");
+        grid.innerHTML = ""; // clear grid before loading
 
-      videos.forEach(video => {
-        // Handle videoId extraction safely
-        let videoId = "";
-        if(video.id.kind === "youtube#video") {
-          videoId = video.id.videoId;
-        } else if (video.id.videoId) {
-          videoId = video.id.videoId;
-        } else if(video.id) {
-          videoId = video.id;
-        }
+        videos.forEach(video => {
+          // Handle videoId extraction safely
+          let videoId = "";
+          if(video.id.kind === "youtube#video") {
+            videoId = video.id.videoId;
+          } else if (video.id.videoId) {
+            videoId = video.id.videoId;
+          } else if(video.id) {
+            videoId = video.id;
+          }
 
-        // Handle thumbnail fallback
-        const thumbs = video.snippet.thumbnails;
-        const thumbUrl = (thumbs.high && thumbs.high.url) || (thumbs.medium && thumbs.medium.url) || (thumbs.default && thumbs.default.url) || "";
+          // Handle thumbnail fallback
+          const thumbs = video.snippet.thumbnails;
+          const thumbUrl = (thumbs.high && thumbs.high.url) || (thumbs.medium && thumbs.medium.url) || (thumbs.default && thumbs.default.url) || "";
 
-        if(!thumbUrl) {
-          console.warn("No thumbnail for video:", video.snippet.title);
-        }
+          if(!thumbUrl) {
+            console.warn("No thumbnail for video:", video.snippet.title);
+          }
 
-        const container = document.createElement("div");
-        container.className = "rounded-xl overflow-hidden shadow-lg bg-white hover:scale-105 transition-all duration-300 cursor-pointer";
+          const container = document.createElement("div");
+          container.className = "rounded-xl overflow-hidden shadow-lg bg-white hover:scale-105 transition-all duration-300 cursor-pointer";
 
-        container.innerHTML = `
-          <img class="w-full" src="${thumbUrl}" alt="${video.snippet.title}" />
-          <div class="p-4">
-            <h2 class="text-sm font-semibold">${video.snippet.title}</h2>
-          </div>
-        `;
+          container.innerHTML = `
+            <img class="w-full" src="${thumbUrl}" alt="${video.snippet.title}" />
+            <div class="p-4">
+              <h2 class="text-sm font-semibold">${video.snippet.title}</h2>
+            </div>
+          `;
 
-        container.onclick = () => {
-          const modal = document.getElementById("videoModal");
-          const iframe = document.getElementById("modalIframe");
-          iframe.src = \`https://www.youtube.com/embed/\${videoId}?autoplay=1\`;
-          modal.classList.remove("hidden");
-        };
+          container.onclick = () => {
+            const modal = document.getElementById("videoModal");
+            const iframe = document.getElementById("modalIframe");
+            iframe.src = \`https://www.youtube.com/embed/\${videoId}?autoplay=1\`;
+            modal.classList.remove("hidden");
+          };
 
-        grid.appendChild(container);
-      });
-    } catch (e) {
-      console.error("Error loading videos", e);
+          grid.appendChild(container);
+        });
+      } catch (e) {
+        console.error("Error loading videos", e);
+      }
     }
-  }
 
-  window.onload = fetchVideos;
-</script>
+    window.onload = fetchVideos;
+  </script>
 </head>
 <body class="bg-gradient-to-br from-pink-100 to-purple-200 text-gray-800 min-h-screen">
   <header class="text-center py-8">
