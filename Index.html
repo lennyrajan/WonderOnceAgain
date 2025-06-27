@@ -86,6 +86,25 @@
     }
 
     window.onload = fetchVideos;
+
+    // Dynamic background gradient
+const gradients = [
+  "from-pink-100 to-purple-200",
+  "from-yellow-100 to-red-200",
+  "from-blue-100 to-indigo-200",
+  "from-green-100 to-teal-200",
+  "from-rose-100 to-fuchsia-200",
+  "from-sky-100 to-cyan-200"
+];
+
+let current = 0;
+setInterval(() => {
+  const body = document.getElementById("body");
+  body.classList.remove(...gradients);
+  current = (current + 1) % gradients.length;
+  body.classList.add("bg-gradient-to-br", ...gradients[current].split(" "));
+}, 8000);
+
   </script>
 
 </body>
