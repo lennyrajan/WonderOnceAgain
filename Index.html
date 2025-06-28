@@ -8,37 +8,6 @@
   <meta name="keywords" content="kids stories, bedtime stories, YouTube shorts, magical moments" />
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <style>
-    /* Birds animation */
-    .bird {
-      position: absolute;
-      width: 30px;
-      height: 20px;
-      background: url('https://cdn-icons-png.flaticon.com/512/616/616408.png') no-repeat center/contain;
-      animation-timing-function: linear;
-      will-change: transform;
-      filter: drop-shadow(0 0 1px rgba(0,0,0,0.1));
-      opacity: 0;
-      pointer-events: none;
-      user-select: none;
-      z-index: 20;
-    }
-    @keyframes flyRight {
-      0% {
-        transform: translateX(-40px) translateY(0);
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-      90% {
-        transform: translateX(110vw) translateY(-10px);
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-      }
-    }
-
     /* Grass silhouette for footer */
     .grass {
       position: absolute;
@@ -77,9 +46,6 @@
   <div class="relative flex justify-between items-center px-6 py-2 bg-gray-100 border-b border-gray-300 overflow-visible">
     <div id="greeting" class="text-lg font-semibold text-gray-700 relative z-10"></div>
     <div id="clock" class="font-mono text-gray-600 relative z-10"></div>
-
-    <!-- Birds container inside top bar -->
-    <div id="birdsContainer" class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-visible"></div> <!-- CHANGED: added id -->
   </div>
 
   <header class="text-center py-8 flex-shrink-0">
@@ -127,31 +93,23 @@
   </footer>
 
   <script>
-    // Fetch videos and render
     async function fetchVideos() {
       try {
         const res = await fetch("/.netlify/functions/fetchVideos");
         const data = await res.json();
-
         const grid = document.getElementById("videoGrid");
         grid.innerHTML = "";
-
         data.forEach(video => {
           const id = video.id?.videoId;
           const title = video.snippet?.title || "Untitled";
           const thumb = video.snippet?.thumbnails?.medium?.url || "";
-
           if (!id || !thumb) return;
-
           const div = document.createElement("div");
           div.className = "bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 cursor-pointer";
-          div.innerHTML = `
-            <img src="${thumb}" alt="${title}" class="w-full" />
+          div.innerHTML = `<img src="${thumb}" alt="${title}" class="w-full" />
             <div class="p-4">
               <h2 class="text-md font-semibold">${title}</h2>
-            </div>
-          `;
-
+            </div>`;
           div.onclick = () => openModal(id);
           grid.appendChild(div);
         });
@@ -160,7 +118,6 @@
       }
     }
 
-    // Open modal
     function openModal(videoId) {
       const modal = document.getElementById("videoModal");
       const iframe = document.getElementById("modalIframe");
@@ -168,7 +125,6 @@
       modal.classList.remove("hidden");
     }
 
-    // Close modal
     function closeModal() {
       const modal = document.getElementById("videoModal");
       const iframe = document.getElementById("modalIframe");
@@ -176,26 +132,21 @@
       modal.classList.add("hidden");
     }
 
-    // Greeting and clock update
     function updateGreetingAndClock() {
       const now = new Date();
       const hours = now.getHours();
       const minutes = now.getMinutes();
       const seconds = now.getSeconds();
-
       const pad = n => n.toString().padStart(2, '0');
       document.getElementById('clock').textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-
       let greeting = "Hello!";
       if (hours >= 5 && hours < 12) greeting = "Good morning!";
       else if (hours >= 12 && hours < 17) greeting = "Good afternoon!";
       else if (hours >= 17 && hours < 21) greeting = "Good evening!";
       else greeting = "Good night!";
-
       document.getElementById('greeting').textContent = greeting;
     }
 
-    // Dynamic background gradient cycling
     const gradients = [
       "from-pink-100 to-purple-200",
       "from-yellow-100 to-red-200",
@@ -208,45 +159,18 @@
     let currentGradient = 0;
     function cycleBackground() {
       const body = document.getElementById("body");
-      // Remove previous gradient classes
-      gradients.forEach(g => body.classList.remove("from-pink-100","to-purple-200","from-yellow-100","to-red-200","from-blue-100","to-indigo-200","from-green-100","to-teal-200","from-rose-100","to-fuchsia-200","from-sky-100","to-cyan-200"));
+      gradients.forEach(g => body.classList.remove(...g.split(" ")));
       const gradientClasses = gradients[currentGradient].split(" ");
       body.classList.add("bg-gradient-to-br", ...gradientClasses);
       currentGradient = (currentGradient + 1) % gradients.length;
     }
 
-    // Birds animation inside top bar
-    function createBird(delaySec, topPercent, durationSec) {
-      const container = document.getElementById("birdsContainer"); // CHANGED: select by ID
-      const bird = document.createElement("div");
-      bird.classList.add("bird");
-      bird.style.top = `${topPercent}%`;
-      bird.style.animation = `flyRight ${durationSec}s linear ${delaySec}s forwards`;
-      container.appendChild(bird);
-      // Remove bird after animation ends to clean up DOM
-      bird.addEventListener("animationend", () => {
-        bird.remove();
-      });
-    }
-
-    function startBirdsLoop() {
-      // Create birds every 3 seconds with random top and duration
-      setInterval(() => {
-        const delay = 0;
-        const top = Math.random() * 60 + 10; // between 10% and 70%
-        const duration = 10 + Math.random() * 8; // between 10s and 18s
-        createBird(delay, top, duration);
-      }, 3000);
-    }
-
-    // Initialize everything
     window.onload = () => {
       fetchVideos();
       updateGreetingAndClock();
       setInterval(updateGreetingAndClock, 1000);
       cycleBackground();
       setInterval(cycleBackground, 8000);
-      startBirdsLoop();
     };
   </script>
 
